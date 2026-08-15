@@ -6,7 +6,7 @@
    PURPOSE
      Creates the three staging tables that receive the cleaned CSVs produced by
      the Python pipeline, then verifies the import landed correctly before any
-     star-schema work begins.
+     dimensional modelling work begins.
 
    PIPELINE POSITION
      Raw Kaggle CSVs
@@ -14,7 +14,7 @@
                                       -> cleaned_data/bridge_review_order_clean.csv
         -> scripts/clean_orders.py    -> cleaned_data/orders_delivery_clean.csv
         -> Navicat CSV import         -> THIS FILE's tables
-        -> 01_schema.sql              -> star schema DDL
+        -> 01_schema.sql              -> fact + bridge table DDL
         -> 02_load_facts.sql          -> populate facts and bridges
         -> 03_validation.sql          -> data quality checks
 

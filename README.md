@@ -1,10 +1,10 @@
 # Olist E-Commerce — Customer Experience & Satisfaction Dashboard
 
-A 3-page Power BI dashboard analyzing review scores, satisfaction drivers, and seller-level review signals for Olist, a Brazilian multi-vendor e-commerce marketplace. Built end-to-end from raw CSVs — data cleaning, star schema design, DAX modeling, and dashboard design. Third and final part of a 3-part portfolio series on the Olist dataset ([Part 1: Sales & Revenue Performance](https://github.com/siamsadman/olist-sales-dashboard) · [Part 2: Logistics & Delivery Performance](https://github.com/siamsadman/olist-logistics-dashboard)).
+A 3-page Power BI dashboard analyzing review scores, satisfaction drivers, and seller-level review signals for Olist, a Brazilian multi-vendor e-commerce marketplace. Built end-to-end from raw CSVs — data cleaning, dimensional model design, DAX modeling, and dashboard design. Third and final part of a 3-part portfolio series on the Olist dataset ([Part 1: Sales & Revenue Performance](https://github.com/siamsadman/olist-sales-dashboard) · [Part 2: Logistics & Delivery Performance](https://github.com/siamsadman/olist-logistics-dashboard)).
 
 **[.pbix Download ▸](dashboard/olist_customer_satisfaction_dashboard.pbix)**
 
-> **About this project:** I'm a Senior BI/Reporting Analyst with 12+ years of experience building automated reporting pipelines and Power BI dashboards in production environments. This project — completed alongside earning the Microsoft PL-300 certification — is a from-scratch demonstration of that same end-to-end process on a public dataset: raw data, real data quality problems, a fully modeled star schema, and dashboard design, documented the way I'd document a production deliverable. [Connect on LinkedIn](https://www.linkedin.com/in/siam-sadman)
+> **About this project:** I'm a Senior BI/Reporting Analyst with 12+ years of experience building automated reporting pipelines and Power BI dashboards in production environments. This project — completed alongside earning the Microsoft PL-300 certification — is a from-scratch demonstration of that same end-to-end process on a public dataset: raw data, real data quality problems, a fully realized dimensional model, and dashboard design, documented the way I'd document a production deliverable. [Connect on LinkedIn](https://www.linkedin.com/in/siam-sadman)
 
 ![Customer Experience & Satisfaction Overview](images/page1_overview.png)
 
@@ -20,7 +20,7 @@ That framing is what makes this the right closing project for the series. The sa
 
 ## Tech Stack
 
-- **SQL Server** (Dockerized) — staging, transformation, star schema
+- **SQL Server** (Dockerized) — staging, transformation, dimensional model
 - **Python (pandas)** — data cleaning (null handling, boolean encoding, bridge extraction)
 - **Power BI Desktop** — data modeling, DAX, dashboard design
 - **Navicat Premium** — database administration, CSV import
@@ -29,7 +29,9 @@ That framing is what makes this the right closing project for the series. The sa
 
 ## Data Model
 
-A star schema centered on a review-grain fact table with three bridge tables, reusing the shared dimensions (`dim_date`, `dim_customer`, `dim_seller`, `dim_product`) from Parts 1 and 2 without modifying any existing table.
+A review-grain fact table with three many-to-many bridges and one deliberately disconnected table, reusing the shared dimensions (`dim_date`, `dim_customer`, `dim_seller`, `dim_product`) from Parts 1 and 2 without modifying any existing table.
+
+Worth naming precisely: this is **not a textbook star schema**. Bridges sit between the fact and three of its dimensions, so `dim_seller`, `dim_product` and `dim_customer` are two hops from `fact_reviews` rather than one; all three bridges use bidirectional cross-filtering; and `bridge_review_category_delay` has no relationships at all. It's a bridge-heavy dimensional model, and each departure from the clean star was a decision with a reason — documented below rather than glossed over.
 
 ![Data Model](images/data_model.png)
 
