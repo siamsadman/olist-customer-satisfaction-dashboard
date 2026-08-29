@@ -1,6 +1,6 @@
 # Olist E-Commerce — Customer Experience & Satisfaction Dashboard
 
-A 3-page Power BI dashboard analyzing review scores, satisfaction drivers, and seller-level review signals for Olist, a Brazilian multi-vendor e-commerce marketplace. Built end-to-end from raw CSVs — data cleaning, dimensional model design, DAX modeling, and dashboard design. Third and final part of a 3-part portfolio series on the Olist dataset ([Part 1: Sales & Revenue Performance](https://github.com/siamsadman/olist-sales-dashboard) · [Part 2: Logistics & Delivery Performance](https://github.com/siamsadman/olist-logistics-dashboard)).
+A 3-page Power BI dashboard analyzing review scores, satisfaction drivers, and seller-level review signals for Olist, a Brazilian multi-vendor e-commerce marketplace. Built end-to-end from raw CSVs - data cleaning, dimensional model design, DAX modeling, and dashboard design. Third and final part of a 3-part portfolio series on the Olist dataset ([Part 1: Sales & Revenue Performance](https://github.com/siamsadman/olist-sales-dashboard) · [Part 2: Logistics & Delivery Performance](https://github.com/siamsadman/olist-customer-satisfaction-dashboard)).
 
 **[.pbix Download ▸](dashboard/olist_customer_satisfaction_dashboard.pbix)**
 
