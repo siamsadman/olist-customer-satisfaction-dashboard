@@ -4,7 +4,11 @@ A 3-page Power BI dashboard analyzing review scores, satisfaction drivers, and s
 
 **[.pbix Download ▸](dashboard/olist_customer_satisfaction_dashboard.pbix)**
 
-> **About this project:** I'm a BI Developer and Reporting Analyst with 12+ years of experience building automated reporting pipelines and Power BI dashboards in production environments for clients including British American Tobacco Bangladesh, Arnott's Australia and TOLL Australia. This project - completed alongside earning the Microsoft DP-600 (Fabric Analytics Engineer) and PL-300 (Power BI Data Analyst) certifications - is a from-scratch demonstration of that same end-to-end process on a public dataset: raw data, real data quality problems, a fully modeled star schema, and dashboard design, documented the way I'd document a production deliverable. [Connect on LinkedIn](https://www.linkedin.com/in/siam-sadman)
+> **About this project:** I'm a BI Developer and Reporting Analyst with 12+ years building automated reporting pipelines and Power BI dashboards in production, for clients including British American Tobacco Bangladesh, Arnott's Australia, and TOLL Australia. This project is a from-scratch demonstration of that same end-to-end process on a public dataset — raw data with real quality problems, a fully modeled star schema, and dashboards, with every DAX measure validated against independent SQL. Documented the way I'd document a production deliverable.
+>
+> Microsoft certified: DP-600 (Fabric Analytics Engineer Associate), PL-300 (Power BI Data Analyst Associate).
+>
+> [Connect on LinkedIn](https://www.linkedin.com/in/siam-sadman)
 
 ![Customer Experience & Satisfaction Overview](images/page1_overview.png)
 
