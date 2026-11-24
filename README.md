@@ -76,7 +76,7 @@ Parts 1 and 2 are published and live. Every object in this project is new, and t
 |---|---|
 | Reviews ↔ orders is a genuine many-to-many (789 reviews span multiple orders; 547 orders carry multiple reviews) | Built `bridge_review_order` rather than forcing a false one-to-one. Verified with count queries before designing the schema |
 | `review_comment_title` is 88.3% blank | Collapsed title and message into a single `has_comment` flag; the title column is retained for reference but no measure depends on it |
-| 5,127 reviews (5.4%) have a **negative** delivery-to-review interval — the review predates the recorded delivery timestamp | Investigated as a possible timestamp-rounding artifact and ruled out: only 56% fall within -7 days, with a much deeper tail. Treated as unreliable timing data and excluded from `[Avg Days to Review]` via a `>= 0` filter. Rows retained so the anomaly stays inspectable |
+| 5,127 reviews have a **negative** delivery-to-review interval — the review predates the recorded delivery timestamp | Investigated as a possible timestamp-rounding artifact and ruled out: only 56% fall within -7 days, with a much deeper tail. Treated as unreliable timing data and excluded from `[Avg Days to Review]` via a `>= 0` filter. Rows retained so the anomaly stays inspectable |
 | 759 rows have a NULL `order_value` | Confirmed as the known ~775 zero-item orders from Part 1 (cancelled or unavailable before fulfillment). Bucketed as "Unknown" and filtered out of the price chart rather than coerced to zero — a cancelled order is not an order worth R$0 |
 | 701 reviews have no seller attribution at all | Same root cause. Documented rather than silently dropped: seller-level review counts do not sum to the review total, so any "share of all reviews" measure at seller grain overstates slightly |
 | `BLANK() = FALSE` evaluates to `TRUE` in DAX — `is_late = FALSE` silently swept in 2,865 never-delivered orders | Added explicit `NOT ISBLANK()` guards. Without the guard the on-time count read 91,523 instead of 88,658 and the on-time average read 4.22 instead of 4.29 — an error that flatters the result and would have shipped invisibly |
@@ -86,7 +86,7 @@ Parts 1 and 2 are published and live. Every object in this project is new, and t
 | Declaring comment columns as `NVARCHAR(MAX)` collapsed CSV import to ~10 rows/sec | Bounded to `NVARCHAR(4000)`; the same 98K-row import dropped from 10+ minutes to 41 seconds |
 | pandas writes booleans as `True`/`False`, which SQL Server's `BIT` type rejects | Added `.astype(int)` before `to_csv()` in the cleaning script |
 | Oct–Dec 2016 carries negligible volume (176 / 101 / 45 reviews) | Excluded from trend visuals only, via a visual-level filter. Same treatment Parts 1 and 2 gave the partial Sept 2018 extract; the rows remain in all totals and KPIs |
-| Category `Unknown` (n=1,457) is a translation residue, not a business category | Excluded from category rankings. The source also contains a genuine typo category, `costruction_tools_garden`, distinct from `garden_tools` — retained as-is, since silently merging it would misstate the source |
+| Category `Unknown` is a translation residue, not a business category | Excluded from category rankings. The source also contains a genuine typo category, `costruction_tools_garden`, distinct from `garden_tools` — retained as-is, since silently merging it would misstate the source |
 
 ---
 
@@ -102,7 +102,7 @@ Parts 1 and 2 are published and live. Every object in this project is new, and t
 
 **Role-playing date dimension.** `fact_reviews` and `bridge_review_order` relate to `dim_date` four times in total (review creation, review answer, delivery, estimated delivery). Only review creation is active; the rest are invoked with `USERELATIONSHIP()`. Only one can be active at a time — the direct path from the bridge and the path through the fact table together form a loop.
 
-**Trend visuals exclude statistically thin months.** Monthly trends are filtered to Jan 2017 – Aug 2018. Outside that window monthly review counts fall to 45–176, against 5,000–9,000 in a typical month, which lets a handful of reviews swing the average enough to produce a misleading spike at the edge of the chart.
+**Trend visuals exclude statistically thin months.** Monthly trends are filtered to Jan 2017 – Aug 2018. The three months before the window carry only 45–176 reviews (Jan 2017, the first month inside it, has 232, against 1,392 or more in every month from Feb 2017), which lets a handful of reviews swing the average enough to produce a misleading spike at the edge of the chart.
 
 ---
 
@@ -133,7 +133,7 @@ All three pages share a synced filter panel (Year, State, Category) and carry ha
 - **A long wait is worse than no delivery at all.** Orders delayed 8–14 days score 1.68, *below* orders that were never delivered (1.76). Customers appear to forgive an early cancellation more readily than an extended, unresolved wait — an actionable signal for how to handle orders that are already running late.
 - **Unhappy customers explain themselves; satisfied ones don't.** Comment rate falls from 77.3% at 1 star to 32.8% at 4 stars, then ticks back up to 38.1% at 5 stars. The overall 43.07% comment rate badly understates how much written feedback concentrates in the 1–2 star bucket — which means free-text review mining on this platform is disproportionately sampling the unhappy.
 - **Extreme seller scores are mostly small-sample effects.** The best and worst qualifying sellers differ by 2.67 points, but that spread collapses as volume rises: 30–49 review sellers range across 1.93 points, while the 26 largest sellers span only 0.85. Seller-level satisfaction converges hard toward the 4.09 platform average.
-- **Higher-value orders score consistently lower**, from 4.16 under R$50 down to 3.93 above R$500 — a modest but monotonic decline, suggesting expectations scale with price faster than service does.
+- **Higher-value orders score consistently lower**, from 4.17 under R$25 down to 3.94 above R$500 — a modest decline, suggesting expectations scale with price faster than service does.
 - **Response is fast for almost everyone, and glacial for a few.** 86% of reviews get a response within 3 days, but a 655-review tail waits over 30 days, with the longest cases stretching past a year.
 
 ---
